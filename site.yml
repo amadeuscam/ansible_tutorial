@@ -19,9 +19,9 @@
     when : ansible_distribution == "Ubuntu" 
 
 - hosts: all
-  become: trueq
+  become: true
   tasks:
-
+    #add ssh key to remote user
   - name: add ssh key for amadeuscam
     tags: always
     authorized_key:

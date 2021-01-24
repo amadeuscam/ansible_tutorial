@@ -21,19 +21,19 @@
 - hosts: all
   become: true
   tasks:
-
+    #create user in remote machines 
   - name: create amadeuscam user
     tags: always
     user:
       name: amadeuscam
       group: root
-
+    #add ssh key that user
   - name: add ssh key for amadeuscam
     tags: always
     authorized_key:
       user: amadeuscam
       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF8fBxthFRMTF0Jm9bEVwukYTJYO9nG7/sjfKi03ZoyQ ansible"
-  
+    #add root permision of that user
   - name: add sudores file for amadeuscam
     tags: always
     copy:
