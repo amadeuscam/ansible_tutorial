@@ -1,0 +1,45 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks: #tiene preferencias sober los demas 
+
+  - name: install updates (CentOS)
+    tags: always
+    dnf: 
+      update_only: yes
+      update_cache: yes
+    when : ansible_distribution == "CentOS" 
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt: 
+      upgrade: dist
+      update_cache: yes
+    when : ansible_distribution == "Ubuntu" 
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create amadeuscam user
+    tags: always
+    user:
+      name: amadeuscam
+      group: root
+
+  - name: add ssh key for amadeuscam
+    tags: always
+    authorized_key:
+      user: amadeuscam
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF8fBxthFRMTF0Jm9bEVwukYTJYO9nG7/sjfKi03ZoyQ ansible"
+  
+  - name: add sudores file for amadeuscam
+    tags: always
+    copy:
+      src: sudoer_amadeuscam
+      dest: /etc/sudoers.d/amadeuscam 
+      owner: root
+      group: root
+      mode: 0440
+

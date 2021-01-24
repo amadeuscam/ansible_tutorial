@@ -4,19 +4,48 @@
   become: true
   pre_tasks: #tiene preferencias sober los demas 
 
-  - name: install updates (CentOS)
+  - name: update repo cache (CentOS)
     tags: always
     dnf: 
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when : ansible_distribution == "CentOS" 
 
-  - name: install updates (Ubuntu)
+  - name: update repo cache (Ubuntu)
     tags: always
     apt: 
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when : ansible_distribution == "Ubuntu" 
+
+- hosts: all
+  become: trueq
+  tasks:
+
+  - name: add ssh key for amadeuscam
+    tags: always
+    authorized_key:
+      user: amadeuscam
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF8fBxthFRMTF0Jm9bEVwukYTJYO9nG7/sjfKi03ZoyQ ansible"
+  
+
+- hosts: workstations
+  become: true
+  tasks:
+    - name: install unzip
+      package:
+        name: unzip
+    
+    - name: install terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
+
+
 
 - hosts: web_servers
   become: true
@@ -46,6 +75,8 @@
       src: default_site.html
       dest: /var/www/html/index.html
       owner: root
+      group: root
+      mode: 0644
 
 - hosts: db_servers
   become: true
