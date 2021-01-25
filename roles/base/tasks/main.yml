@@ -1,0 +1,6 @@
+#aqui se declara solo las tasks
+- name: add ssh key for amadeuscam
+  tags: always
+  authorized_key:
+    user: amadeuscam
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF8fBxthFRMTF0Jm9bEVwukYTJYO9nG7/sjfKi03ZoyQ ansible"
